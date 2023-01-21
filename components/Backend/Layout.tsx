@@ -7,6 +7,7 @@ import LinkPreview from "./LinkPreview";
 import Head from "next/head";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "firebase.config";
+import LoadingContextProvider from "context/LoadingContext";
 
 const Layout = ({
   children,
@@ -28,23 +29,28 @@ const Layout = ({
   return (
     <LinksContextProvider>
       <ProfileContextProvider uid={user?.uid ? user.uid : ""}>
-        <Head>
-          <title>{title}</title>
-          <meta content="width=device-width, initial-scale=1" name="viewport" />
-          <meta
-            name="description"
-            content="Unleash the power of your online presence with Linklush"
-          />
-          <link rel="icon" href="/assets/linklush-site-icon.png" />
-        </Head>
-        <Header />
-        <main className="flex flex-col lg:flex-row w-full max-w-[100vw] min-h-[100vh] bg-[#eff0f3]">
-          <SideMenu />
-          <section className="lg:w-2/3 h-fit m-2 md:m-4 bg-white rounded-3xl">
-            {children}
-          </section>
-          <LinkPreview />
-        </main>
+        <LoadingContextProvider>
+          <Head>
+            <title>{title}</title>
+            <meta
+              content="width=device-width, initial-scale=1"
+              name="viewport"
+            />
+            <meta
+              name="description"
+              content="Unleash the power of your online presence with Linklush"
+            />
+            <link rel="icon" href="/assets/linklush-site-icon.png" />
+          </Head>
+          <Header />
+          <main className="flex flex-col lg:flex-row w-full max-w-[100vw] min-h-[100vh] bg-[#eff0f3]">
+            <SideMenu />
+            <section className="lg:w-2/3 h-fit m-2 md:m-4 bg-white rounded-3xl">
+              {children}
+            </section>
+            <LinkPreview />
+          </main>
+        </LoadingContextProvider>
       </ProfileContextProvider>
     </LinksContextProvider>
   );

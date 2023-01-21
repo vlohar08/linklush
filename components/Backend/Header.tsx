@@ -9,9 +9,12 @@ import { useCallback, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "firebase.config";
 import { defaultLinks, useUpdateLinks } from "context/LinkContext";
+import { useLoading, useUpdateLoading } from "context/LoadingContext";
 
 const Header = () => {
   const profile = useProfile();
+  const isLoading = useLoading();
+  const updateIsLoading = useUpdateLoading();
   const updateLinks = useUpdateLinks();
   const updateProfile = useUpdateProfile();
 
@@ -24,14 +27,16 @@ const Header = () => {
         const docData = docSnap.data();
         updateLinks(docData.links);
         updateProfile(docData.profile);
+        updateIsLoading(false);
       } else {
         await setDoc(doc(db, "users", profile.uid), {
           links: defaultLinks,
           profile: defaultProfile,
         });
+        updateIsLoading(false);
       }
     }
-  }, [profile.uid, updateLinks, updateProfile]);
+  }, [profile.uid, updateIsLoading, updateLinks, updateProfile]);
 
   useEffect(() => {
     getUserData();
@@ -49,7 +54,7 @@ const Header = () => {
           alt="User Profile Image"
         />
         <p className="w-[10ch] sm:w-fit font-medium text-base whitespace-nowrap text-ellipsis overflow-hidden">
-          Hello, {profile.name}
+          Hello, {isLoading ? "Loading..." : profile.name}
         </p>
       </div>
     </header>

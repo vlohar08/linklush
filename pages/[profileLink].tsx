@@ -2,6 +2,7 @@ import DisplayUserProfileWithLinks from "components/Backend/DisplayUserProfileWi
 import { Link } from "context/LinkContext";
 import { Profile } from "context/ProfileContext";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import findProfileByLink from "utils/findProfileByLink";
 
 type User = {
@@ -14,6 +15,9 @@ const ProfileId = ({ user }: { user: User }) => {
 
   return (
     <section className="flex flex-col items-center w-full h-fit min-h-[800px] bg-white p-3 md:p-6 rounded-3xl text-center">
+      <Head>
+        <script>console.log(1)</script>
+      </Head>
       <DisplayUserProfileWithLinks profile={profile} links={links} />
     </section>
   );

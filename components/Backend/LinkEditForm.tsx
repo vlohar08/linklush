@@ -1,7 +1,7 @@
-import { IconTrash } from "@tabler/icons";
+import { IconInnerShadowBottomLeft, IconTrash } from "@tabler/icons";
 import { useLinks, useUpdateLinks } from "context/LinkContext";
 import { doc, updateDoc } from "firebase/firestore";
-import React from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 import ChangeImage from "./ChangeImage";
 import FormInput from "../FormInput";
@@ -14,6 +14,7 @@ import { nanoid } from "nanoid";
 
 const LinkEditForm = ({ id }: { id: string }) => {
   const ICON_STROKE = 1;
+  const [isSaving, setIsSaving] = useState(false);
   const links = useLinks();
   const { uid } = useProfile();
   const linkIndex = links.findIndex((link) => link.id === id);
@@ -59,9 +60,11 @@ const LinkEditForm = ({ id }: { id: string }) => {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     await updateDoc(doc(db, "users", uid), {
       links,
     });
+    setIsSaving(false);
   };
 
   return (
@@ -104,7 +107,18 @@ const LinkEditForm = ({ id }: { id: string }) => {
           icon={<IconTrash className="cursor-pointer" stroke={ICON_STROKE} />}
           onClick={handleDelete}
         />
-        <Button title="Save" onClick={handleSave} />
+        <Button
+          icon={
+            isSaving && (
+              <IconInnerShadowBottomLeft
+                className="animate-spin h-5 w-5 mr-3 ..."
+                stroke={ICON_STROKE}
+              />
+            )
+          }
+          title={isSaving ? "Saving..." : "Save"}
+          onClick={handleSave}
+        />
       </div>
     </div>
   );

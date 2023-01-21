@@ -10,9 +10,13 @@ import { nanoid } from "nanoid";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "firebase.config";
 import { useProfile } from "context/ProfileContext";
+import { useLoading } from "context/LoadingContext";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Dashboard: NextPageWithLayout = () => {
   const links = useLinks();
+  const isLoading = useLoading();
   const { uid } = useProfile();
   const updateLinks = useUpdateLinks();
 
@@ -44,12 +48,24 @@ const Dashboard: NextPageWithLayout = () => {
         />
       </div>
       <div>
-        {links.map(({ id }) => (
-          <Fragment key={id}>
-            <LinkCard id={id} />
-            <LinkEditForm id={id} />
-          </Fragment>
-        ))}
+        {isLoading ? (
+          <Skeleton
+            baseColor="#e0f5fe"
+            highlightColor="#ffe8f0"
+            className="mt-3"
+            borderRadius={10}
+            height={60}
+            duration={2}
+            count={4}
+          />
+        ) : (
+          links.map(({ id }) => (
+            <Fragment key={id}>
+              <LinkCard id={id} />
+              <LinkEditForm id={id} />
+            </Fragment>
+          ))
+        )}
       </div>
     </div>
   );
