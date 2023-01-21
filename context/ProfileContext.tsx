@@ -10,6 +10,9 @@ export type Profile = {
   showButton: boolean;
   buttonText: string;
   buttonLink: string;
+  buttonColor: string;
+  primaryColor: string;
+  textColor: string;
 };
 
 type UpdateProfileContext = React.Dispatch<
@@ -23,6 +26,9 @@ type UpdateProfileContext = React.Dispatch<
     showButton: boolean;
     buttonText: string;
     buttonLink: string;
+    buttonColor: string;
+    primaryColor: string;
+    textColor: string;
   }>
 >;
 export const defaultProfile = {
@@ -35,6 +41,9 @@ export const defaultProfile = {
   showButton: true,
   buttonText: "Message us",
   buttonLink: "https://linklush.com",
+  buttonColor: "#07aef4",
+  primaryColor: "#e0f5fe",
+  textColor: "#000000",
 };
 const ProfileContext = createContext<Profile>(defaultProfile);
 const UpdateProfileContext = createContext<UpdateProfileContext | (() => null)>(

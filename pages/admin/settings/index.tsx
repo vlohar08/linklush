@@ -11,6 +11,7 @@ import findProfileByLink from "utils/findProfileByLink";
 import resizeFile from "utils/resizeImage";
 import { deleteObject, getStorage, ref, uploadBytes } from "firebase/storage";
 import { nanoid } from "nanoid";
+import ColorPicker from "components/Backend/ColorPicker";
 
 const Settings = () => {
   const profile = useProfile();
@@ -115,6 +116,30 @@ const Settings = () => {
           }}
         />
       </div>
+      <ColorPicker
+        title="Button Color"
+        value={profile.buttonColor}
+        onChange={(e) => {
+          updatedProfile.buttonColor = e.target.value;
+          updateProfile(updatedProfile);
+        }}
+      />
+      <ColorPicker
+        title="Primary Color"
+        value={profile.primaryColor}
+        onChange={(e) => {
+          updatedProfile.primaryColor = e.target.value;
+          updateProfile(updatedProfile);
+        }}
+      />
+      <ColorPicker
+        title="Text Color"
+        value={profile.textColor}
+        onChange={(e) => {
+          updatedProfile.textColor = e.target.value;
+          updateProfile(updatedProfile);
+        }}
+      />
       <ChangeImage
         title="Avatar"
         message="Change profile image"

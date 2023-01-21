@@ -1,5 +1,8 @@
 import { IconDotsVertical, IconPencilMinus } from "@tabler/icons";
 import { useLinks, useUpdateLinks } from "context/LinkContext";
+import { useProfile } from "context/ProfileContext";
+import { db } from "firebase.config";
+import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 
 type LinkCard = {
@@ -8,6 +11,7 @@ type LinkCard = {
 
 const LinkCard = ({ id }: LinkCard) => {
   const links = useLinks();
+  const { uid } = useProfile();
   const linkIndex = links.findIndex((link) => link.id === id);
   const { icon, title, href } = links[linkIndex];
   const updateLinks = useUpdateLinks();
@@ -17,6 +21,9 @@ const LinkCard = ({ id }: LinkCard) => {
     const updatedLinks = [...links];
     updatedLinks[linkIndex].isExpanded = !updatedLinks[linkIndex].isExpanded;
     updateLinks(updatedLinks);
+    await updateDoc(doc(db, "users", uid), {
+      links: updatedLinks,
+    });
   };
 
   return (
