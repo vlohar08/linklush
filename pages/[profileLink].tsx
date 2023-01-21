@@ -2,22 +2,23 @@ import DisplayUserProfileWithLinks from "components/Backend/DisplayUserProfileWi
 import { Link } from "context/LinkContext";
 import { Profile } from "context/ProfileContext";
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import findProfileByLink from "utils/findProfileByLink";
 
 type User = {
   profile: Profile;
   links: Link[];
+  analytics: string;
 };
 
 const ProfileId = ({ user }: { user: User }) => {
-  const { profile, links } = user;
-
+  const { profile, links, analytics } = user;
   return (
     <section className="flex flex-col items-center w-full h-fit min-h-[800px] bg-white p-3 md:p-6 rounded-3xl text-center">
-      <Head>
-        <script>console.log(1)</script>
-      </Head>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `${Buffer.from(analytics, "base64")}`,
+        }}
+      />
       <DisplayUserProfileWithLinks profile={profile} links={links} />
     </section>
   );

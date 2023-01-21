@@ -10,6 +10,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "firebase.config";
 import { defaultLinks, useUpdateLinks } from "context/LinkContext";
 import { useLoading, useUpdateLoading } from "context/LoadingContext";
+import { useUpdateAnalytics } from "context/AnalyticsContext";
 
 const Header = () => {
   const profile = useProfile();
@@ -17,7 +18,7 @@ const Header = () => {
   const updateIsLoading = useUpdateLoading();
   const updateLinks = useUpdateLinks();
   const updateProfile = useUpdateProfile();
-
+  const updateAnalytics = useUpdateAnalytics();
   const getUserData = useCallback(async () => {
     if (profile.uid) {
       const docRef = doc(db, "users", profile.uid);
@@ -28,15 +29,23 @@ const Header = () => {
         updateLinks(docData.links);
         updateProfile(docData.profile);
         updateIsLoading(false);
+        updateAnalytics(Buffer.from(docData.analytics, "base64").toString());
       } else {
         await setDoc(doc(db, "users", profile.uid), {
           links: defaultLinks,
           profile: defaultProfile,
+          analytics: "",
         });
         updateIsLoading(false);
       }
     }
-  }, [profile.uid, updateIsLoading, updateLinks, updateProfile]);
+  }, [
+    profile.uid,
+    updateAnalytics,
+    updateIsLoading,
+    updateLinks,
+    updateProfile,
+  ]);
 
   useEffect(() => {
     getUserData();
