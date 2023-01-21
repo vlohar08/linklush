@@ -2,6 +2,7 @@ import { Link as LinkType } from "context/LinkContext";
 import { Profile } from "context/ProfileContext";
 import Image from "next/image";
 import Link from "next/link";
+import LinklushLogo from "@/assets/linklush-logo.png";
 
 const DisplayUserProfileWithLinks = ({
   profile,
@@ -74,6 +75,19 @@ const DisplayUserProfileWithLinks = ({
           );
         })}
       </div>
+      <div className="mt-4 flex justify-center items-center gap-x-2">
+        <p>Powered by</p>
+        <Image className="w-[100px]" src={LinklushLogo} alt="Linklush logo" />
+      </div>
+      <p className="mt-2">
+        Made by{" "}
+        <Link
+          className="underline"
+          href="https://my-portfolio-two-brown.vercel.app/"
+        >
+          Vishal Lohar
+        </Link>
+      </p>
     </>
   );
 };

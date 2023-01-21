@@ -7,10 +7,12 @@ import {
 } from "context/ProfileContext";
 import { useCallback, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "firebase.config";
+import { auth, db } from "firebase.config";
 import { defaultLinks, useUpdateLinks } from "context/LinkContext";
 import { useLoading, useUpdateLoading } from "context/LoadingContext";
 import { useUpdateAnalytics } from "context/AnalyticsContext";
+import { useRouter } from "next/router";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Header = () => {
   const profile = useProfile();
@@ -19,6 +21,7 @@ const Header = () => {
   const updateLinks = useUpdateLinks();
   const updateProfile = useUpdateProfile();
   const updateAnalytics = useUpdateAnalytics();
+  const router = useRouter();
   const getUserData = useCallback(async () => {
     if (profile.uid) {
       const docRef = doc(db, "users", profile.uid);
@@ -46,6 +49,12 @@ const Header = () => {
     updateLinks,
     updateProfile,
   ]);
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.replace("/login");
+    }
+  });
 
   useEffect(() => {
     getUserData();

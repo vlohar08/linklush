@@ -17,8 +17,8 @@ const firebaseConfig = {
 export const actionCodeSettings = {
   url:
     process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/"
-      : "linklush.vercel.app",
+      ? "http://localhost:3000/login"
+      : "linklush.vercel.app/login",
   handleCodeInApp: true,
 };
 

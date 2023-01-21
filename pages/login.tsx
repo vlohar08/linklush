@@ -1,12 +1,14 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import SocialLoginBtn from "components/SocialLoginBtn";
 import FormInput from "components/FormInput";
 import Image from "next/image";
 import linkLushLogo from "@/assets/linklush-logo.png";
 import {
   GoogleAuthProvider,
+  isSignInWithEmailLink,
   onAuthStateChanged,
   sendSignInLinkToEmail,
+  signInWithEmailLink,
   signInWithPopup,
 } from "firebase/auth";
 import { actionCodeSettings, auth, provider } from "firebase.config";
@@ -15,6 +17,7 @@ import Head from "next/head";
 
 const LoginOrRegister = () => {
   const [email, setEmail] = useState("");
+  const [isLinkSent, setIsLinkSent] = useState(false);
   const router = useRouter();
 
   onAuthStateChanged(auth, (user) => {
@@ -23,15 +26,33 @@ const LoginOrRegister = () => {
     }
   });
 
+  useEffect(() => {
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      let email = window.localStorage.getItem("emailForSignIn");
+      if (!email) {
+        email = window.prompt("Please provide your email for confirmation");
+      } else {
+        signInWithEmailLink(auth, email, window.location.href)
+          .then((result) => {
+            window.localStorage.removeItem("emailForSignIn");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  }, []);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => {
+      .then((res) => {
         window.localStorage.setItem("emailForSignIn", email);
+        setIsLinkSent(true);
       })
       .catch((error) => {
         const errorMessage = error.message;
-        console.log(errorMessage);
+        alert(errorMessage);
       });
   };
 
@@ -77,6 +98,12 @@ const LoginOrRegister = () => {
             Login or Register
           </button>
         </form>
+        {isLinkSent && (
+          <p className="text-center mt-4">
+            Account login link sent to your email address. Please follow the
+            link inside to continue.
+          </p>
+        )}
         <SocialLoginBtn
           logo="/assets/google-logo.webp"
           provider="Google"
