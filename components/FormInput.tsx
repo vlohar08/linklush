@@ -20,7 +20,7 @@ const FormInput = ({
   onChange,
 }: FormInput) => {
   return (
-    <div>
+    <div className="w-full">
       {title && <p className="text-gray-600 mb-1">{title}</p>}
       <div className="relative w-full border-primary-light border-[2px] rounded-lg">
         <input
