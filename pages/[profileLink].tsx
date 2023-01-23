@@ -2,6 +2,7 @@ import DisplayUserProfileWithLinks from "components/Backend/DisplayUserProfileWi
 import { Link } from "context/LinkContext";
 import { Profile } from "context/ProfileContext";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import findProfileByLink from "utils/findProfileByLink";
 
 type User = {
@@ -19,6 +20,9 @@ const ProfileId = ({ user }: { user: User }) => {
           __html: `${Buffer.from(analytics, "base64")}`,
         }}
       />
+      <Head>
+        <title>{profile.name}</title>
+      </Head>
       <DisplayUserProfileWithLinks profile={profile} links={links} />
     </section>
   );

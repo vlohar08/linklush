@@ -15,6 +15,7 @@ import { nanoid } from "nanoid";
 const LinkEditForm = ({ id }: { id: string }) => {
   const ICON_STROKE = 1;
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const links = useLinks();
   const { uid } = useProfile();
   const linkIndex = links.findIndex((link) => link.id === id);
@@ -25,6 +26,7 @@ const LinkEditForm = ({ id }: { id: string }) => {
 
   const handleIconChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      setIsUploading(true);
       const resizedImage = await resizeFile(e.target.files[0]);
       const storage = getStorage();
       const storageRef = ref(storage, nanoid(5) + e.target.files[0].name);
@@ -38,6 +40,7 @@ const LinkEditForm = ({ id }: { id: string }) => {
           links: updatedLinks,
         });
         updateLinks(updatedLinks);
+        setIsUploading(false);
       });
       //Delete previous Icon
       if (iconName) {
@@ -95,10 +98,11 @@ const LinkEditForm = ({ id }: { id: string }) => {
       />
       <ChangeImage
         title="Link"
-        message="Change icon or image"
+        message={isUploading ? "Uploading..." : "Change icon or image"}
         icon={icon}
         onChange={handleIconChange}
         id={id}
+        disabled={isUploading}
       />
       <div className="flex flex-wrap items-center justify-end gap-x-3">
         <Button

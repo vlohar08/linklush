@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
+import { GetServerSideProps } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,3 +22,13 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/admin/dashboard",
+    },
+    props: {},
+  };
+};

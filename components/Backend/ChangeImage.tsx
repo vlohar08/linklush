@@ -7,9 +7,17 @@ type ChangeImage = {
   icon: string;
   title: string;
   message: string;
+  disabled: boolean;
 };
 
-const ChangeImage = ({ id, title, message, icon, onChange }: ChangeImage) => {
+const ChangeImage = ({
+  id,
+  title,
+  message,
+  disabled,
+  icon,
+  onChange,
+}: ChangeImage) => {
   return (
     <div>
       <p className="text-gray-600">{title}</p>
@@ -24,6 +32,7 @@ const ChangeImage = ({ id, title, message, icon, onChange }: ChangeImage) => {
         <input
           className="hidden"
           type="file"
+          disabled={disabled}
           id={"icon" + id}
           name={"icon" + id}
           onChange={onChange}

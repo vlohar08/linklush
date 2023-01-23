@@ -31,8 +31,8 @@ const Header = () => {
         const docData = docSnap.data();
         updateLinks(docData.links);
         updateProfile(docData.profile);
-        updateIsLoading(false);
         updateAnalytics(Buffer.from(docData.analytics, "base64").toString());
+        updateIsLoading(false);
       } else {
         await setDoc(doc(db, "users", profile.uid), {
           links: defaultLinks,

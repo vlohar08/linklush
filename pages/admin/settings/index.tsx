@@ -23,12 +23,15 @@ const Settings = () => {
   const updatedProfile = { ...profile };
   const isLoading = useLoading();
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleIconChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      setIsUploading(true);
       const resizedImage = await resizeFile(e.target.files[0]);
       const storage = getStorage();
       const storageRef = ref(storage, nanoid(5) + e.target.files[0].name);
+
       uploadBytes(storageRef, resizedImage).then(async ({ metadata }) => {
         updatedProfile.avatar = `https://firebasestorage.googleapis.com/v0/b/${metadata.bucket}/o/${metadata.fullPath}?alt=media`;
         updatedProfile.avatarName = metadata.fullPath;
@@ -37,6 +40,7 @@ const Settings = () => {
           profile: updatedProfile,
         });
         updateProfile(updatedProfile);
+        setIsUploading(false);
       });
       //Delete previous avatar
       if (profile.avatarName) {
@@ -167,6 +171,7 @@ const Settings = () => {
             id={"1"}
             icon={profile.avatar}
             onChange={handleIconChange}
+            disabled={isUploading}
           />
           <Button
             className="ml-auto"

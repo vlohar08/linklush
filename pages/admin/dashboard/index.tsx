@@ -42,6 +42,7 @@ const Dashboard: NextPageWithLayout = () => {
       <div className="flex flex-wrap items-center gap-x-2 justify-between">
         <h2 className="text-xl font-semibold">My link</h2>
         <Button
+          disabled={isLoading}
           onClick={handleAddNewLinks}
           title="Add New Link"
           icon={<IconPlus stroke={1} />}
