@@ -39,6 +39,10 @@ const Settings = () => {
         await updateDoc(doc(db, "users", profile.uid), {
           profile: updatedProfile,
         });
+        await fetch("/api/revalidate", {
+          method: "POST",
+          body: JSON.stringify({ profileLink: profile?.link }),
+        });
         updateProfile(updatedProfile);
         setIsUploading(false);
       });
@@ -61,6 +65,10 @@ const Settings = () => {
     } else {
       await updateDoc(doc(db, "users", profile.uid), {
         profile,
+      });
+      await fetch("/api/revalidate", {
+        method: "POST",
+        body: JSON.stringify({ profileLink: profile?.link }),
       });
       setIsSaving(false);
     }
@@ -167,7 +175,7 @@ const Settings = () => {
           />
           <ChangeImage
             title="Avatar"
-            message="Change profile image"
+            message={isUploading ? "Uploading..." : "Change profile image"}
             id={"1"}
             icon={profile.avatar}
             onChange={handleIconChange}

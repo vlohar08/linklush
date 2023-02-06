@@ -17,7 +17,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 const Dashboard: NextPageWithLayout = () => {
   const links = useLinks();
   const isLoading = useLoading();
-  const { uid } = useProfile();
+  const { uid, link } = useProfile();
   const updateLinks = useUpdateLinks();
 
   const defaultLink = {
@@ -34,6 +34,10 @@ const Dashboard: NextPageWithLayout = () => {
     updateLinks((prevLinks) => [...prevLinks, defaultLink]);
     await updateDoc(doc(db, "users", uid), {
       links: [...links, defaultLink],
+    });
+    await fetch("/api/revalidate", {
+      method: "POST",
+      body: JSON.stringify({ profileLink: link }),
     });
   };
 

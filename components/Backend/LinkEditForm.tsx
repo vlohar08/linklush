@@ -17,7 +17,7 @@ const LinkEditForm = ({ id }: { id: string }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const links = useLinks();
-  const { uid } = useProfile();
+  const { uid, link } = useProfile();
   const linkIndex = links.findIndex((link) => link.id === id);
   const { icon, iconName, isExpanded, isEnabled, href, title } =
     links[linkIndex];
@@ -38,6 +38,10 @@ const LinkEditForm = ({ id }: { id: string }) => {
         //Update User on database
         await updateDoc(doc(db, "users", uid), {
           links: updatedLinks,
+        });
+        await fetch("/api/revalidate", {
+          method: "POST",
+          body: JSON.stringify({ profileLink: link }),
         });
         updateLinks(updatedLinks);
         setIsUploading(false);
@@ -66,6 +70,10 @@ const LinkEditForm = ({ id }: { id: string }) => {
     setIsSaving(true);
     await updateDoc(doc(db, "users", uid), {
       links,
+    });
+    await fetch("/api/revalidate", {
+      method: "POST",
+      body: JSON.stringify({ profileLink: link }),
     });
     setIsSaving(false);
   };

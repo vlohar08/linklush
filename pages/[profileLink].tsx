@@ -1,7 +1,7 @@
 import DisplayUserProfileWithLinks from "components/Backend/DisplayUserProfileWithLinks";
 import { Link } from "context/LinkContext";
 import { Profile } from "context/ProfileContext";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import findProfileByLink from "utils/findProfileByLink";
 
@@ -30,13 +30,13 @@ const ProfileId = ({ user }: { user: User }) => {
 
 export default ProfileId;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const profileLink = context.query.profileLink as string;
-
+export const getStaticProps: GetStaticProps = async (context) => {
+  // @ts-ignore
+  const profileLink = context?.params.profileLink as string;
   const user = await findProfileByLink(profileLink);
 
   // @ts-ignore
-  if (!user?.links) {
+  if (!user) {
     return {
       notFound: true,
     };
@@ -44,5 +44,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: { user },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [{ params: { profileLink: "vishal" } }],
+    fallback: "blocking",
   };
 };

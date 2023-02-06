@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const Analytics = () => {
-  const { uid } = useProfile();
+  const { uid, link } = useProfile();
   const isLoading = useLoading();
   const [isSaving, setIsSaving] = useState(false);
   const analytics = useAnalytics();
@@ -20,6 +20,10 @@ const Analytics = () => {
     setIsSaving(true);
     await updateDoc(doc(db, "users", uid), {
       analytics: window.btoa(analytics),
+    });
+    await fetch("/api/revalidate", {
+      method: "POST",
+      body: JSON.stringify({ profileLink: link }),
     });
     setIsSaving(false);
   };
